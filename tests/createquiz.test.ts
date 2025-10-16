@@ -10,6 +10,10 @@ const quizDetails = {
   quizname: "Tree",
 };
 
+const updateQuizDetails={
+  quizname:"Branch"
+}
+let quizid:string="";
 
 describe("quiz creation", () => {
   let token: string;
@@ -26,9 +30,26 @@ describe("quiz creation", () => {
         }
       }
     );
+    quizid=response.data.id;
     console.log("quiz created successfully");
     expect(response.status).to.equals(200);
-  });
+
+    }); 
+
+ it("should update the quiz name",async()=>{
+    const response=await authAxios.put<AuthResponse>(
+        `/quiz/update/${quizid}`,updateQuizDetails,{
+             headers:{
+            Authorization: `Bearer ${token}`,
+          }
+        }
+    );
+    console.log("Quiz updated successfully");
+    expect(response.status).to.equals(200);
+  })
+
+
 
  
+
 });
