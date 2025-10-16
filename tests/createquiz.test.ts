@@ -1,26 +1,34 @@
-import axios from "axios";
-import dotenv from "dotenv"
-import { AuthResponse } from "./interfaces.js";
+import dotenv from "dotenv";
+import type{ AuthResponse } from "./interfaces.js";
 import { expect } from "chai";
+import { authAxios } from "./axios.js";
+import { loginUser } from "./index.test.js";
 
 dotenv.config();
 
+const quizDetails = {
+  quizname: "Tree",
+};
 
-const createQuizAxios=axios.create({
-    baseURL:process.env.BASE_URL as string,
-    headers:{
-        "Content-Type":"application/json"
-    }
-})
 
-const quizDetails={
-    quizname:"HP"
-}
+describe("quiz creation", () => {
+  let token: string;
+  before("user should be logged in", async () => {
+    token = await loginUser();
+    console.log("Login token", token);
+  });
+  it("should create a quiz successfully", async () => {
+    const response = await authAxios.post<AuthResponse>(
+      "/quiz/create",
+      quizDetails,{
+        headers:{
+            Authorization: `Bearer ${token}`,
+        }
+      }
+    );
+    console.log("quiz created successfully");
+    expect(response.status).to.equals(200);
+  });
 
-describe('quiz creation',()=>{
-    it("should create a quiz successfully",async()=>{
-        const response=await createQuizAxios.post<AuthResponse>("/quiz/create",quizDetails);
-        console.log("quiz create successfully");
-        expect(response.status).to.equals(200);
-    })
-})
+ 
+});
