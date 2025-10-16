@@ -7,11 +7,11 @@ import { loginUser } from "./index.test.js";
 dotenv.config();
 
 const quizDetails = {
-  quizname: "Tree",
+  quizname: "error",
 };
 
 const updateQuizDetails={
-  quizname:"Branch"
+  quizname:"no-error"
 }
 let quizid:string="";
 
@@ -45,6 +45,18 @@ describe("quiz creation", () => {
         }
     );
     console.log("Quiz updated successfully");
+    expect(response.status).to.equals(200);
+  })
+
+   it("should delete the quiz",async()=>{
+    const response=await authAxios.delete<AuthResponse>(
+        `/quiz/delete/${quizid}`,{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        }
+    )
+    console.log("Quiz deleted successfully");
     expect(response.status).to.equals(200);
   })
 
